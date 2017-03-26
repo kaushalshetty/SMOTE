@@ -1,8 +1,22 @@
+
+'''
+Created on 27/03/2017
+@author: Kaushal Shetty
+This is an implementation of the SMOTE Algorithm. 
+See: "SMOTE: synthetic minority over-sampling technique" by
+Chawla, N.V et al.
+'''
+
+
+
+
+
 import numpy as np
 import random
 from sklearn.neighbors import NearestNeighbors
 import math
 from random import randint
+
 
 
 class Smote(object):
@@ -16,6 +30,12 @@ class Smote(object):
 
 
 	def Populate(self,N,i,indices,min_samples,k):
+		"""
+    Populates the synthitic array
+
+
+    Returns:Synthetic Array to generate_syntheic_points 
+    """
 
 		while N!=0:
 			arr = []
@@ -47,6 +67,16 @@ class Smote(object):
 
 
 	def find_k(self,X,k):
+
+	"""
+   		Finds k nearest neighbors using euclidian distance
+
+   		Returns: The k nearest neighbor   
+    """
+
+
+
+
 		euclid_distance = np.empty([X.shape[0],X.shape[0]],dtype = np.float32)
 		
 		for i in range(len(X)):
@@ -64,6 +94,21 @@ class Smote(object):
 
 
 	def generate_syntheic_points(self,min_samples,N,k):
+
+		"""
+    Returns (N/100) * n_minority_samples synthetic minority samples.
+    Parameters
+    ----------
+    min_samples : Numpy_array-like, shape = [n_minority_samples, n_features]
+        Holds the minority samples
+    N : percetange of new synthetic samples: 
+        n_synthetic_samples = N/100 * n_minority_samples. Can be < 100.
+    k : int. Number of nearest neighbours. 
+    Returns
+    -------
+    S : Synthetic samples. array, 
+        shape = [(N/100) * n_minority_samples, n_features]. 
+    """
 		
 
 		if N < 100:
