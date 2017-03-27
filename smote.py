@@ -16,11 +16,15 @@ import random
 from sklearn.neighbors import NearestNeighbors
 import math
 from random import randint
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+
 
 
 
 class Smote(object):
 	"""docstring for Smote"""
+
 	def __init__(self,distance):
 		super(Smote, self).__init__()
 		self.synthetic_arr=  []
@@ -31,11 +35,11 @@ class Smote(object):
 
 	def Populate(self,N,i,indices,min_samples,k):
 		"""
-    Populates the synthitic array
+    		Populates the synthitic array
 
 
-    Returns:Synthetic Array to generate_syntheic_points 
-    """
+    		Returns:Synthetic Array to generate_syntheic_points 
+    	"""
 
 		while N!=0:
 			arr = []
@@ -68,11 +72,11 @@ class Smote(object):
 
 	def find_k(self,X,k):
 
-	"""
-   		Finds k nearest neighbors using euclidian distance
+		"""
+   			Finds k nearest neighbors using euclidian distance
 
-   		Returns: The k nearest neighbor   
-    """
+   			Returns: The k nearest neighbor   
+    	"""
 
 
 
@@ -93,22 +97,22 @@ class Smote(object):
 
 
 
-	def generate_syntheic_points(self,min_samples,N,k):
+	def generate_synthetic_points(self,min_samples,N,k):
 
 		"""
-    Returns (N/100) * n_minority_samples synthetic minority samples.
-    Parameters
-    ----------
-    min_samples : Numpy_array-like, shape = [n_minority_samples, n_features]
-        Holds the minority samples
-    N : percetange of new synthetic samples: 
-        n_synthetic_samples = N/100 * n_minority_samples. Can be < 100.
-    k : int. Number of nearest neighbours. 
-    Returns
-    -------
-    S : Synthetic samples. array, 
-        shape = [(N/100) * n_minority_samples, n_features]. 
-    """
+    		Returns (N/100) * n_minority_samples synthetic minority samples.
+    		Parameters
+    		----------
+    		min_samples : Numpy_array-like, shape = [n_minority_samples, n_features]
+    		    Holds the minority samples
+    		N : percetange of new synthetic samples: 
+    		    n_synthetic_samples = N/100 * n_minority_samples. Can be < 100.
+    		k : int. Number of nearest neighbours. 
+    		Returns
+    		-------
+    		S : Synthetic samples. array, 
+    		    shape = [(N/100) * n_minority_samples, n_features]. 
+    	"""
 		
 
 		if N < 100:
@@ -145,5 +149,33 @@ class Smote(object):
 		
 
 
+	def plot_synthetic_points(self,min_samples,N,k):
+		"""
 
+			Plot the over sampled synthtic samples in a scatterplot
+
+
+
+		"""
+
+
+		if N < 100:
+			raise ValueError("Value of N cannot be less than 100%")
+
+		if self.distance_measure not in ('euclidian','ball_tree'):
+			raise ValueError("Invalid Distance Measure.You can use only Euclidian or ball_tree")
+
+
+		if k>min_samples.shape[0]:
+			raise ValueError("Size of k cannot exceed the number of samples.")
+
+		
+		synthetic_points = self.generate_synthetic_points(min_samples,N,k)
+		
+		pca = PCA(n_components=2)
+		pca.fit(synthetic_points)
+		pca_synthetic_points = pca.transform(synthetic_points)
+		
+		plt.scatter(pca_synthetic_points[:,0],pca_synthetic_points[:,1])
+		plt.show()
 		
